@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { authService } from "../firebaseInstance";
 import {
   getAuth,
-  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [newAccount, setNewAccount] = useState(false);
+  const [newAccount, setNewAccount] = useState(true);
 
   const onChange = (event) => {
     const {
@@ -22,27 +22,15 @@ const Auth = () => {
     }
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
     try {
       let data;
       const auth = getAuth();
       if (newAccount) {
-        // create Account
-        createUserWithEmailAndPassword(auth, email, password).then(
-          (userCredential) => {
-            const user = userCredential.user;
-            console.log(user);
-          }
-        );
+        data = await createUserWithEmailAndPassword(auth, email, password);
       } else {
-        // log in
-        signInWithEmailAndPassword(auth, email, password).then(
-          (userCredential) => {
-            const user = userCredential.user;
-            console.log(user);
-          }
-        );
+        data = await signInWithEmailAndPassword(auth, email, password);
       }
       console.log(data);
     } catch (error) {
