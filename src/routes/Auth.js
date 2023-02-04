@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import { authService } from "../firebaseInstance";
+import { authService, firebaseInstances } from "../firebaseInstance";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [newAccount, setNewAccount] = useState(true);
+  const [error, setError] = useState("");
 
   const onChange = (event) => {
     const {
@@ -34,8 +37,24 @@ const Auth = () => {
       }
       console.log(data);
     } catch (error) {
-      console.error(error);
+      setError(error.message);
     }
+  };
+
+  const toggleAccount = () => setNewAccount(!newAccount);
+  const onSocialClick = async (event) => {
+    const {
+      target: { name },
+    } = event;
+
+    let provider;
+    if (name === "google") {
+      provider = new GoogleAuthProvider();
+    } else {
+      //...
+    }
+    const result = await signInWithPopup(authService, provider);
+    console.log(result);
   };
 
   return (
@@ -62,9 +81,15 @@ const Auth = () => {
           value={newAccount ? "Create an Account" : "Log in"}
         />
       </form>
+      {error}
+      <span onClick={toggleAccount}>
+        {newAccount ? "Sign In" : "Create An Account"}
+      </span>
       <div>
         <button>Continue with Email</button>
-        <button>Continue with Google</button>
+        <button name={"google"} onClick={onSocialClick}>
+          Continue with Google
+        </button>
       </div>
     </div>
   );
