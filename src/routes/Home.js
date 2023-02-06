@@ -5,29 +5,23 @@ import {
   dbCollection,
   dbGetCollection,
 } from "../firebaseInstance";
-import { serverTimestamp } from "firebase/firestore";
+import {
+  serverTimestamp,
+  onSnapshot,
+  query,
+  orderBy,
+} from "firebase/firestore";
 
-const Home = () => {
+const Home = ({ userObj }) => {
   const [dtweet, setDtweet] = useState("");
   const [dtweets, setDtweets] = useState([]);
 
-  const getTweets = async () => {
-    const querySnapshot = await dbGetCollection(
-      dbCollection(dbService, "dtweets")
-    );
-    querySnapshot.forEach((doc) => {
-      const dtweetObj = {
-        ...doc.data(),
-        id: doc.id,
-      };
-      setDtweets((prev) => [dtweetObj, ...prev]);
-    });
-  };
   const onSubmit = async (e) => {
     e.preventDefault();
     await dbAddDoc(dbCollection(dbService, "dtweets"), {
-      dtweet,
+      text: dtweet,
       createdAt: serverTimestamp(),
+      creatorId: userObj.uid,
     });
     setDtweet("");
   };
@@ -36,12 +30,18 @@ const Home = () => {
   };
 
   useEffect(() => {
-    getTweets();
+    const q = query(
+      dbCollection(dbService, "dtweets"),
+      orderBy("createdAt", "desc")
+    );
+    onSnapshot(q, (snapshot) => {
+      const dtweetArr = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setDtweets(dtweetArr);
+    });
   }, []);
-
-  useEffect(() => {
-    console.log(dtweets);
-  }, [dtweets]);
 
   return (
     <div>
@@ -59,7 +59,7 @@ const Home = () => {
         {dtweets.map((data, index) => {
           return (
             <div key={data.id + index}>
-              <h4>{data.dtweet}</h4>
+              <h4>{data.text}</h4>
             </div>
           );
         })}
