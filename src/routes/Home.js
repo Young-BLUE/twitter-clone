@@ -11,6 +11,7 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
+import Dtweet from "../components/Dtweet";
 
 const Home = ({ userObj }) => {
   const [dtweet, setDtweet] = useState("");
@@ -58,9 +59,11 @@ const Home = ({ userObj }) => {
       <div>
         {dtweets.map((data, index) => {
           return (
-            <div key={data.id + index}>
-              <h4>{data.text}</h4>
-            </div>
+            <Dtweet
+              key={data.id}
+              dtweetObj={data}
+              isOwner={data.creatorId === userObj.uid}
+            />
           );
         })}
       </div>
