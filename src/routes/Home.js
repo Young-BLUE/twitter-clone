@@ -30,6 +30,18 @@ const Home = ({ userObj }) => {
     setDtweet(event.target.value);
   };
 
+  const onFileChange = (event) => {
+    const {
+      target: { files },
+    } = event;
+    const theFile = files[0];
+    const reader = new FileReader();
+    reader.onloadend = (finishedEvent) => {
+      console.log(finishedEvent);
+    };
+    reader.readAsDataURL(theFile);
+  };
+
   useEffect(() => {
     const q = query(
       dbCollection(dbService, "dtweets"),
@@ -53,6 +65,7 @@ const Home = ({ userObj }) => {
           maxLength={120}
           onChange={onChange}
         />
+        <input type={"file"} accept={"image/*"} onChange={onFileChange} />
         <input type={"submit"} value={"dtweet"} />
         {dtweet}
       </form>
