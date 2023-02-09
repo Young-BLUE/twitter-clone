@@ -16,6 +16,7 @@ import Dtweet from "../components/Dtweet";
 const Home = ({ userObj }) => {
   const [dtweet, setDtweet] = useState("");
   const [dtweets, setDtweets] = useState([]);
+  const [attachment, setAttachment] = useState();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -37,9 +38,15 @@ const Home = ({ userObj }) => {
     const theFile = files[0];
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
-      console.log(finishedEvent);
+      const {
+        currentTarget: { result },
+      } = finishedEvent;
+      setAttachment(result);
     };
     reader.readAsDataURL(theFile);
+  };
+  const onClearAttachment = () => {
+    setAttachment(null);
   };
 
   useEffect(() => {
@@ -67,6 +74,12 @@ const Home = ({ userObj }) => {
         />
         <input type={"file"} accept={"image/*"} onChange={onFileChange} />
         <input type={"submit"} value={"dtweet"} />
+        {attachment && (
+          <div>
+            <img src={attachment} width={"80px"} height={"50px"} />
+            <button onClick={onClearAttachment}>Clear</button>
+          </div>
+        )}
         {dtweet}
       </form>
       <div>
