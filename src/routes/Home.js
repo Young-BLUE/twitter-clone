@@ -4,6 +4,7 @@ import {
   dbAddDoc,
   dbCollection,
   dbGetCollection,
+  storageService,
 } from "../firebaseInstance";
 import {
   serverTimestamp,
@@ -11,7 +12,9 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
+import { ref, uploadString } from "firebase/storage";
 import Dtweet from "../components/Dtweet";
+import { v4 as uuidv4 } from "uuid";
 
 const Home = ({ userObj }) => {
   const [dtweet, setDtweet] = useState("");
@@ -20,12 +23,16 @@ const Home = ({ userObj }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await dbAddDoc(dbCollection(dbService, "dtweets"), {
-      text: dtweet,
-      createdAt: serverTimestamp(),
-      creatorId: userObj.uid,
-    });
-    setDtweet("");
+    // 사진을 먼저 업로드하고 url을 받아 dtweet에 함께 저장
+    // await dbAddDoc(dbCollection(dbService, "dtweets"), {
+    //   text: dtweet,
+    //   createdAt: serverTimestamp(),
+    //   creatorId: userObj.uid,
+    // });
+    // setDtweet("");
+    const fileRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+    const response = await uploadString(fileRef, attachment, "data_url");
+    console.log(response);
   };
   const onChange = (event) => {
     setDtweet(event.target.value);
