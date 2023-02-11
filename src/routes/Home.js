@@ -12,27 +12,35 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
-import { ref, uploadString } from "firebase/storage";
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import Dtweet from "../components/Dtweet";
 import { v4 as uuidv4 } from "uuid";
 
 const Home = ({ userObj }) => {
   const [dtweet, setDtweet] = useState("");
   const [dtweets, setDtweets] = useState([]);
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState("");
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // 사진을 먼저 업로드하고 url을 받아 dtweet에 함께 저장
-    // await dbAddDoc(dbCollection(dbService, "dtweets"), {
-    //   text: dtweet,
-    //   createdAt: serverTimestamp(),
-    //   creatorId: userObj.uid,
-    // });
-    // setDtweet("");
-    const fileRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
-    const response = await uploadString(fileRef, attachment, "data_url");
-    console.log(response);
+    let attachmentURL = "";
+    if (attachment !== "") {
+      const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+      const response = await uploadString(
+        attachmentRef,
+        attachment,
+        "data_url"
+      );
+      attachmentURL = await getDownloadURL(response.ref);
+    }
+    await dbAddDoc(dbCollection(dbService, "dtweets"), {
+      text: dtweet,
+      createdAt: serverTimestamp(),
+      creatorId: userObj.uid,
+      attachmentURL,
+    });
+    setDtweet("");
+    setAttachment("");
   };
   const onChange = (event) => {
     setDtweet(event.target.value);
@@ -83,7 +91,7 @@ const Home = ({ userObj }) => {
         <input type={"submit"} value={"dtweet"} />
         {attachment && (
           <div>
-            <img src={attachment} width={"80px"} height={"50px"} />
+            <img src={attachment} width={"60px"} height={"80px"} />
             <button onClick={onClearAttachment}>Clear</button>
           </div>
         )}

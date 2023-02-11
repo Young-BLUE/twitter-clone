@@ -42,6 +42,9 @@ const Dtweet = ({ dtweetObj, isOwner }) => {
       ) : (
         <>
           <h4>{dtweetObj.text}</h4>
+          {dtweetObj.attachmentURL && (
+            <img src={dtweetObj.attachmentURL} width={"60px"} height={"80px"} />
+          )}
           {isOwner && (
             <>
               <button onClick={onDeleteClick}>Delete</button>
