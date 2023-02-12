@@ -85,6 +85,7 @@ const Home = ({ userObj }) => {
           type={"text"}
           placeholder={"What is on your mind?"}
           maxLength={120}
+          value={dtweet}
           onChange={onChange}
         />
         <input type={"file"} accept={"image/*"} onChange={onFileChange} />
