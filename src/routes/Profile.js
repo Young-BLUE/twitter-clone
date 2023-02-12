@@ -36,9 +36,9 @@ const Profile = ({ userObj }) => {
     }
   };
 
-  useEffect(() => {
-    getMyDtweets();
-  }, []);
+  // useEffect(() => {
+  //   getMyDtweets();
+  // }, []);
   return (
     <>
       <form onSubmit={onSubmit}>
