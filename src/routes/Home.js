@@ -15,54 +15,10 @@ import {
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import Dtweet from "../components/Dtweet";
 import { v4 as uuidv4 } from "uuid";
+import DtweetFactory from "../components/DtweetFactory";
 
 const Home = ({ userObj }) => {
-  const [dtweet, setDtweet] = useState("");
   const [dtweets, setDtweets] = useState([]);
-  const [attachment, setAttachment] = useState("");
-
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    let attachmentURL = "";
-    if (attachment !== "") {
-      const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
-      const response = await uploadString(
-        attachmentRef,
-        attachment,
-        "data_url"
-      );
-      attachmentURL = await getDownloadURL(response.ref);
-    }
-    await dbAddDoc(dbCollection(dbService, "dtweets"), {
-      text: dtweet,
-      createdAt: serverTimestamp(),
-      creatorId: userObj.uid,
-      attachmentURL,
-    });
-    setDtweet("");
-    setAttachment("");
-  };
-  const onChange = (event) => {
-    setDtweet(event.target.value);
-  };
-
-  const onFileChange = (event) => {
-    const {
-      target: { files },
-    } = event;
-    const theFile = files[0];
-    const reader = new FileReader();
-    reader.onloadend = (finishedEvent) => {
-      const {
-        currentTarget: { result },
-      } = finishedEvent;
-      setAttachment(result);
-    };
-    reader.readAsDataURL(theFile);
-  };
-  const onClearAttachment = () => {
-    setAttachment(null);
-  };
 
   useEffect(() => {
     const q = query(
@@ -80,24 +36,7 @@ const Home = ({ userObj }) => {
 
   return (
     <div>
-      <form onSubmit={onSubmit}>
-        <input
-          type={"text"}
-          placeholder={"What is on your mind?"}
-          maxLength={120}
-          value={dtweet}
-          onChange={onChange}
-        />
-        <input type={"file"} accept={"image/*"} onChange={onFileChange} />
-        <input type={"submit"} value={"dtweet"} />
-        {attachment && (
-          <div>
-            <img src={attachment} width={"60px"} height={"80px"} />
-            <button onClick={onClearAttachment}>Clear</button>
-          </div>
-        )}
-        {dtweet}
-      </form>
+      <DtweetFactory userObj={userObj} />
       <div>
         {dtweets.map((data, index) => {
           return (
