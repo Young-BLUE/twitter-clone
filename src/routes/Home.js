@@ -1,20 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-  dbService,
-  dbAddDoc,
-  dbCollection,
-  dbGetCollection,
-  storageService,
-} from "../firebaseInstance";
-import {
-  serverTimestamp,
-  onSnapshot,
-  query,
-  orderBy,
-} from "firebase/firestore";
-import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { dbCollection, dbService } from "../firebaseInstance";
+import { onSnapshot, orderBy, query } from "firebase/firestore";
 import Dtweet from "../components/Dtweet";
-import { v4 as uuidv4 } from "uuid";
 import DtweetFactory from "../components/DtweetFactory";
 
 const Home = ({ userObj }) => {
