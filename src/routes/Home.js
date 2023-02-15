@@ -35,9 +35,9 @@ const Home = ({ userObj }) => {
   }, []);
 
   return (
-    <div>
+    <div className="container">
       <DtweetFactory userObj={userObj} />
-      <div>
+      <div style={{ marginTop: 30 }}>
         {dtweets.map((data, index) => {
           return (
             <Dtweet

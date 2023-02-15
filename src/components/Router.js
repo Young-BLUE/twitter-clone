@@ -11,14 +11,23 @@ const AppRouter = ({ refreshUser, isLoggedIn, userObj }) => {
       {isLoggedIn && <Navigation userObj={userObj} />}
       <Routes>
         {isLoggedIn ? (
-          <>
+          <div
+            style={{
+              maxWidth: 890,
+              width: "100%",
+              margin: "0 auto",
+              marginTop: 80,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
             <Route exact path={"/"} element={<Home userObj={userObj} />} />
             <Route
               exact
               path={"/profile"}
               element={<Profile userObj={userObj} refreshUser={refreshUser} />}
             />
-          </>
+          </div>
         ) : (
           <Route exact path={"/"} element={<Auth />} />
         )}
