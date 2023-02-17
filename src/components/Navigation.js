@@ -17,7 +17,7 @@ const Navigation = ({ userObj }) => {
           <Link
             to={"/profile"}
             style={{
-              marginLeft: 10,
+              marginLeft: 20,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
