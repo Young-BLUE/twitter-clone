@@ -34,11 +34,26 @@ const Dtweet = ({ dtweetObj, isOwner }) => {
     <div className={"dtweet"}>
       {editing ? (
         <>
-          <form onSubmit={onSubmit} className={"container dtweetEdit"}>
+          <form
+            onSubmit={onSubmit}
+            className={"container dtweetEdit"}
+            style={{ marginTop: "10px" }}
+          >
+            {editing && dtweetObj.attachmentURL && (
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <img
+                  src={dtweetObj.attachmentURL}
+                  className={"dtweetEditImg"}
+                />
+              </div>
+            )}
             <input
+              type={"text"}
               placeholder={"Edit your dtweet"}
               value={newDtweet}
               required={true}
+              autoFocus={true}
+              className={"formInput"}
               onChange={onChange}
             />
             <input
@@ -54,7 +69,9 @@ const Dtweet = ({ dtweetObj, isOwner }) => {
       ) : (
         <>
           <h4>{dtweetObj.text}</h4>
-          {dtweetObj.attachmentURL && <img src={dtweetObj.attachmentURL} />}
+          {dtweetObj.attachmentURL && (
+            <img src={dtweetObj.attachmentURL} className={"dtweetImg"} />
+          )}
           {isOwner && (
             <div className={"dtweet__actions"}>
               <span onClick={onDeleteClick}>

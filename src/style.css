@@ -175,7 +175,7 @@ form {
     background-color: white;
     width: 100%;
     max-width: 420px;
-    padding: 20px;
+    padding: 25px 20px;
     border-radius: 10px;
     position: relative;
     display: flex;
@@ -187,7 +187,7 @@ form {
     font-size: 14px;
 }
 
-.dtweet img {
+.dtweetImg {
     right: -10px;
     top: 20px;
     position: absolute;
@@ -195,6 +195,12 @@ form {
     width: 50px;
     height: 50px;
     margin-top: 10px;
+}
+
+.dtweetEditImg {
+    margin-bottom: 20px;
+    width: 80px;
+    display: flex;
 }
 
 .dtweet__actions {
